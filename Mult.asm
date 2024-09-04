@@ -4,44 +4,48 @@
 // File name: projects/04/Mult.asm
 
 // Multiplies R0 and R1 and stores the result in R2.
-// (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[3], respectively.)
+// (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
 
-@2	//GO TO FINAL ANSWER BOX
-M=0	//ZERO ANS BOX
+// Start R2 at 0.
+@R2
+M=0
 
-@0
+// Jump into the first STEP if R0 > 0.
+@R0
 D=M
+@STEP
+D;JGT
+
+// If it didn't jump, go to END.
 @END
-D;JEQ	//IF ONE PRODUCT IS ZERO
+0;JMP
 
-@1
-D=M
-@END
-D;JEQ	//IF ONE PRODUCT IS ZERO
+// Adds R1 to R2 and removes 1 from R0.
+// If R0 is more than 0 we step again.
+(STEP)
+    // Get R2.
+    @R2
+    D=M
 
-@0	//NOT NECESSARY
-D=M	//
-@3	//
-M=D	//ONLY TO KEEP THE NUMBERS BEING MUTLIPLED
+    // Add R1 to it.
+    @R1
+    D=D+M
 
+    // And write the result back to R2.
+    @R2
+    M=D
 
-(LOOP)
-@1	//GET 2ND NUM
-D=M	//D HAS 2ND NUM
+    // Reduce R0 by 1.
+    @R0
+    D=M-1
+    M=D
 
-@2	//GO TO FINAL ANSWER BOX
-M=D+M	//RAM[2] NOW HAS 2ND NUMBER + ITS PREVIOUS VALUE
-
-@3	//GET 1ST NUM
-M=M-1	//1ST NUM-1
-
-D=M	//IDK WHY D NEEDS TO =M?
-@LOOP	//WHERE TO JUMP TO
-D;JGT	//JUMP		    (WHY CANT THIS BE M;JGT?)
-
+    // If R0 is still > 0 then loop.
+    @STEP
+    D;JGT
 
 (END)
-@END
-0;JMP	//FOREVER LOOP
+    @END
+    0;JMP
